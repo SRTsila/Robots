@@ -29,6 +29,7 @@ public class RobotsProgram {
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
                             null, options, options[0]);
                     if (code == 0) {
+                        frame.saveStatement();
                         e.getWindow().setVisible(false);
                         System.exit(0);
                     }

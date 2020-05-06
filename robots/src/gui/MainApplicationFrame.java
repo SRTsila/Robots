@@ -1,11 +1,15 @@
 package gui;
 
+import fileWork.Tuple;
+import fileWork.ConfigurationDataSaver;
 import log.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.util.*;
+import java.util.List;
 
 /**
  * Что требуется сделать:
@@ -32,6 +36,7 @@ public class MainApplicationFrame extends JFrame {
         logWindow = createLogWindow();
         addWindow(logWindow);
         gameWindow = new GameWindow();
+        gameWindow.setLocation(1, 1);
         gameWindow.setSize(1200, 1200);
         addWindow(gameWindow);
         setJMenuBar(generateMenuBar());
@@ -81,7 +86,7 @@ public class MainApplicationFrame extends JFrame {
 //        return menuBar;
 //    }
 
-    private JMenu createSubMenu(String name, String[] subMenuNames, int key) {
+    private JMenu createMenu(String name, String[] subMenuNames, int key) {
         JMenu menu = new JMenu(name);
         menu.setMnemonic(key);
         for (String menuName : subMenuNames) {
@@ -93,7 +98,7 @@ public class MainApplicationFrame extends JFrame {
     private JMenuBar generateMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu lookAndFeelMenu = createSubMenu("Режим отображения",
+        JMenu lookAndFeelMenu = createMenu("Режим отображения",
                 new String[]{"Управление режимом отображения приложения"}, KeyEvent.VK_V);
 
         {
@@ -114,7 +119,7 @@ public class MainApplicationFrame extends JFrame {
             lookAndFeelMenu.add(crossplatformLookAndFeel);
         }
 
-        JMenu testMenu = createSubMenu("Тесты", new String[]{"Тестовые команды"}, KeyEvent.VK_T);
+        JMenu testMenu = createMenu("Тесты", new String[]{"Тестовые команды"}, KeyEvent.VK_T);
 
         {
             JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
@@ -124,10 +129,10 @@ public class MainApplicationFrame extends JFrame {
             testMenu.add(addLogMessageItem);
         }
 
-        JMenu exitMenu = createSubMenu("Выход", new String[]{"Закрытие приложения"}, KeyEvent.VK_E);
+        JMenu exitMenu = createMenu("Тiкаем", new String[]{"Закрытие приложения"}, KeyEvent.VK_E);
 
         {
-            JMenuItem exitItem = new JMenuItem("Завершить работу", KeyEvent.VK_X | KeyEvent.VK_ALT);
+            JMenuItem exitItem = new JMenuItem("Выход", KeyEvent.VK_X | KeyEvent.VK_ALT);
             exitItem.addActionListener((event) -> {
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
@@ -154,4 +159,11 @@ public class MainApplicationFrame extends JFrame {
         }
     }
 
+    void saveStatement() {
+        List<Tuple<String, Map<String, String>>> allWindowsConfigs = new ArrayList<>();
+        allWindowsConfigs.add(this.logWindow.saveStatement());
+        allWindowsConfigs.add(this.gameWindow.saveStatement());
+        ConfigurationDataSaver conf = new ConfigurationDataSaver();
+        conf.saveData(allWindowsConfigs);
+    }
 }
