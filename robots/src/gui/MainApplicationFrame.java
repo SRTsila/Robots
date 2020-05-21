@@ -11,28 +11,22 @@ import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.List;
 
-/**
- * Что требуется сделать:
- * 1. Метод создания меню перегружен функционалом и трудно читается.
- * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
- */
-public class MainApplicationFrame extends JFrame {
-    private final JDesktopPane desktopPane = new JDesktopPane();
-    private LogWindow logWindow;
-    private GameWindow gameWindow;
+
+class MainApplicationFrame extends JFrame {
+    private final JDesktopPane desktopPane;
+    private final LogWindow logWindow;
+    private final GameWindow gameWindow;
 
 
-    public MainApplicationFrame() {
-        //Make the big window be indented 50 pixels from each edge
-        //of the screen.
+    MainApplicationFrame() {
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
                 screenSize.width - inset * 2,
                 screenSize.height - inset * 2);
 
+        desktopPane = new JDesktopPane();
         setContentPane(desktopPane);
-
         logWindow = createLogWindow();
         addWindow(logWindow);
         gameWindow = new GameWindow();
@@ -42,7 +36,7 @@ public class MainApplicationFrame extends JFrame {
         setJMenuBar(generateMenuBar());
     }
 
-    protected LogWindow createLogWindow() {
+    private LogWindow createLogWindow() {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
         logWindow.setLocation(10, 10);
         logWindow.setSize(300, 800);
@@ -52,41 +46,13 @@ public class MainApplicationFrame extends JFrame {
         return logWindow;
     }
 
-    protected void addWindow(JInternalFrame frame) {
+    private void addWindow(JInternalFrame frame) {
         desktopPane.add(frame);
         frame.setVisible(true);
     }
 
-//    protected JMenuBar createMenuBar() {
-//        JMenuBar menuBar = new JMenuBar();
-//
-//        //Set up the lone menu.
-//        JMenu menu = new JMenu("Document");
-//        menu.setMnemonic(KeyEvent.VK_D);
-//        menuBar.add(menu);
-//
-//        //Set up the first menu item.
-//        JMenuItem menuItem = new JMenuItem("New");
-//        menuItem.setMnemonic(KeyEvent.VK_N);
-//        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-//                KeyEvent.VK_N, ActionEvent.ALT_MASK));
-//        menuItem.setActionCommand("new");
-////        menuItem.addActionListener(this);
-//        menu.add(menuItem);
-//
-//        //Set up the second menu item.
-//        menuItem = new JMenuItem("Quit");
-//        menuItem.setMnemonic(KeyEvent.VK_Q);
-//        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-//                KeyEvent.VK_Q, ActionEvent.ALT_MASK));
-//        menuItem.setActionCommand("quit");
-////        menuItem.addActionListener(this);
-//        menu.add(menuItem);
-//
-//        return menuBar;
-//    }
 
-    private JMenu createMenu(String name, String[] subMenuNames, int key) {
+    private JMenu createSubMenu(String name, int key, String... subMenuNames) {
         JMenu menu = new JMenu(name);
         menu.setMnemonic(key);
         for (String menuName : subMenuNames) {
@@ -98,8 +64,44 @@ public class MainApplicationFrame extends JFrame {
     private JMenuBar generateMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu lookAndFeelMenu = createMenu("Режим отображения",
-                new String[]{"Управление режимом отображения приложения"}, KeyEvent.VK_V);
+        JMenu lookAndFeelMenu = createLookAndFeelMenu();
+        JMenu testMenu = createTestMenu();
+        JMenu exitMenu = createExitMenu();
+
+        menuBar.add(lookAndFeelMenu);
+        menuBar.add(testMenu);
+        menuBar.add(exitMenu);
+        return menuBar;
+    }
+
+    private JMenu createExitMenu() {
+        JMenu exitMenu = createSubMenu("Выход", KeyEvent.VK_E, "Закрытие приложения");
+
+        {
+            JMenuItem exitItem = new JMenuItem("Завершить работу", KeyEvent.VK_X | KeyEvent.VK_ALT);
+            exitItem.addActionListener((event) -> Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
+                    new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
+
+            exitItem.add(new JButton());
+            exitMenu.add(exitItem);
+        }
+        return exitMenu;
+    }
+
+    private JMenu createTestMenu() {
+        JMenu testMenu = createSubMenu("Тесты", KeyEvent.VK_T, "Тестовые команды");
+
+        {
+            JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
+            addLogMessageItem.addActionListener((event) -> Logger.debug("Новая строка"));
+            testMenu.add(addLogMessageItem);
+        }
+        return testMenu;
+    }
+
+    private JMenu createLookAndFeelMenu() {
+        JMenu lookAndFeelMenu = createSubMenu("Режим отображения", KeyEvent.VK_V,
+                "Управление режимом отображения приложения");
 
         {
             JMenuItem systemLookAndFeel = new JMenuItem("Системная схема", KeyEvent.VK_S);
@@ -118,34 +120,7 @@ public class MainApplicationFrame extends JFrame {
             });
             lookAndFeelMenu.add(crossplatformLookAndFeel);
         }
-
-        JMenu testMenu = createMenu("Тесты", new String[]{"Тестовые команды"}, KeyEvent.VK_T);
-
-        {
-            JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
-            addLogMessageItem.addActionListener((event) -> {
-                Logger.debug("Новая строка");
-            });
-            testMenu.add(addLogMessageItem);
-        }
-
-        JMenu exitMenu = createMenu("Тiкаем", new String[]{"Закрытие приложения"}, KeyEvent.VK_E);
-
-        {
-            JMenuItem exitItem = new JMenuItem("Выход", KeyEvent.VK_X | KeyEvent.VK_ALT);
-            exitItem.addActionListener((event) -> {
-                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
-                        new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-            });
-
-            exitItem.add(new JButton());
-            exitMenu.add(exitItem);
-        }
-
-        menuBar.add(lookAndFeelMenu);
-        menuBar.add(testMenu);
-        menuBar.add(exitMenu);
-        return menuBar;
+        return lookAndFeelMenu;
     }
 
 

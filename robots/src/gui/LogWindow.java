@@ -58,7 +58,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
             super.setLocation(x, y);
         else {
             int previousX = previousStatement.get("x");
-            int previousY= previousStatement.get("y");
+            int previousY = previousStatement.get("y");
             super.setLocation(previousX, previousY);
         }
     }
