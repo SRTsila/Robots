@@ -13,11 +13,12 @@ public class GameWindow extends JInternalFrame implements ProcessStatement {
     private final GameVisualizer m_visualizer;
     private final Map<String, Integer> previousStatement;
 
-    GameWindow()
+    GameWindow(GameModel gameModel)
     {
         super("Игровое поле", true, true, true, true);
         previousStatement = recoverStatement();
-        m_visualizer = new GameVisualizer();
+
+        m_visualizer = new GameVisualizer(gameModel);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);

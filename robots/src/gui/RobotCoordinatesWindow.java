@@ -2,53 +2,53 @@ package gui;
 
 import fileWork.ConfigurationDataRecoverer;
 import fileWork.Tuple;
-import log.LogChangeListener;
-import log.LogEntry;
-import log.LogWindowSource;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener, ProcessStatement {
-    private LogWindowSource m_logSource;
-    private TextArea m_logContent;
+class RobotCoordinatesWindow extends JInternalFrame implements Observer, ProcessStatement {
+    private final TextArea textArea;
+    private final GameModel gameModel;
     private final Map<String, Integer> previousStatement;
 
-    LogWindow(LogWindowSource logSource) {
-        super("Протокол работы", true, true, true, true);
-        previousStatement = recoverStatement();
-        m_logSource = logSource;
-        m_logSource.registerListener(this);
-        m_logContent = new TextArea("");
-        m_logContent.setLocation(0, 215);
-        m_logContent.setSize(200, 500);
 
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(m_logContent, BorderLayout.CENTER);
-        getContentPane().add(panel);
-        pack();
-        updateLogContent();
+    RobotCoordinatesWindow(GameModel gameModel) {
+        super("Координаты робота", true, true, true, true);
+        previousStatement = recoverStatement();
+        setSize(200, 200);
+        setLocation(5, 10);
+        setVisible(true);
+        textArea = new TextArea();
+        this.add(textArea);
+        this.gameModel = gameModel;
+        this.gameModel.attach(this);
     }
 
-    private void updateLogContent() {
-        StringBuilder content = new StringBuilder();
-        for (LogEntry entry : m_logSource.all()) {
-            content.append(entry.getMessage()).append("\n");
+    public void setVisible(boolean visible){
+        if (previousStatement == null)
+            super.setVisible(visible);
+        else {
+            boolean isClosed = previousStatement.get("isClosed") == 1;
+            try {
+                super.setClosed(isClosed);
+            } catch (PropertyVetoException e) {
+                e.printStackTrace();
+            }
         }
-        m_logContent.setText(content.toString());
-        m_logContent.invalidate();
     }
 
     public void setSize(int width, int height) {
         if (previousStatement == null)
-            super.setSize(width, height);
+            super.setSize(200, 200);
         else {
             int previousWidth = previousStatement.get("width");
             int previousHeight = previousStatement.get("height");
             boolean isClosed = previousStatement.get("isClosed") == 1;
+            super.setVisible(!isClosed);
             super.setSize(previousWidth, previousHeight);
         }
     }
@@ -64,8 +64,10 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
     }
 
     @Override
-    public void onLogChanged() {
-        EventQueue.invokeLater(this::updateLogContent);
+    public void update() {
+        GameStatement gameStatement = gameModel.getState();
+        textArea.append("X: " + gameStatement.m_robotPositionX + "\n"
+                + "Y: " + gameStatement.m_robotPositionY + "\n");
     }
 
     @Override
@@ -74,14 +76,14 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
         Dimension size = this.getSize();
         Boolean isClosed = this.isClosed();
         Map<String, String> statement = createStatementMap(position, size, isClosed);
-        return new Tuple<>("log", statement);
+        return new Tuple<>("coordinates", statement);
     }
 
     @Override
     public Map<String, Integer> recoverStatement() {
         try {
             ConfigurationDataRecoverer recoverer = new ConfigurationDataRecoverer();
-            return recoverer.getStatement("log");
+            return recoverer.getStatement("coordinates");
         } catch (IOException ex) {
             return null;
         }

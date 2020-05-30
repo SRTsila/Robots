@@ -16,6 +16,8 @@ class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane;
     private final LogWindow logWindow;
     private final GameWindow gameWindow;
+    private final RobotCoordinatesWindow robotCoordinatesWindow;
+    private final GameModel gameModel;
 
 
     MainApplicationFrame() {
@@ -29,17 +31,18 @@ class MainApplicationFrame extends JFrame {
         setContentPane(desktopPane);
         logWindow = createLogWindow();
         addWindow(logWindow);
-        gameWindow = new GameWindow();
+        gameModel = new GameModel();
+        gameWindow = new GameWindow(gameModel);
         gameWindow.setLocation(1, 1);
         gameWindow.setSize(1200, 1200);
         addWindow(gameWindow);
+        robotCoordinatesWindow = new RobotCoordinatesWindow(gameModel);
+        addWindow(robotCoordinatesWindow);
         setJMenuBar(generateMenuBar());
     }
 
     private LogWindow createLogWindow() {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        logWindow.setLocation(10, 10);
-        logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
         Logger.debug("Протокол работает");
@@ -138,6 +141,7 @@ class MainApplicationFrame extends JFrame {
         List<Tuple<String, Map<String, String>>> allWindowsConfigs = new ArrayList<>();
         allWindowsConfigs.add(this.logWindow.saveStatement());
         allWindowsConfigs.add(this.gameWindow.saveStatement());
+        allWindowsConfigs.add(this.robotCoordinatesWindow.saveStatement());
         ConfigurationDataSaver conf = new ConfigurationDataSaver();
         conf.saveData(allWindowsConfigs);
     }
