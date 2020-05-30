@@ -52,7 +52,7 @@ class MainApplicationFrame extends JFrame {
     }
 
 
-    private JMenu createSubMenu(String name, int key, String... subMenuNames) {
+    private static JMenu createSubMenu(String name, int key, String... subMenuNames) {
         JMenu menu = new JMenu(name);
         menu.setMnemonic(key);
         for (String menuName : subMenuNames) {
@@ -79,8 +79,10 @@ class MainApplicationFrame extends JFrame {
 
         {
             JMenuItem exitItem = new JMenuItem("Завершить работу", KeyEvent.VK_X | KeyEvent.VK_ALT);
-            exitItem.addActionListener((event) -> Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
-                    new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
+            exitItem.addActionListener((event) -> {
+                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
+                        new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            });
 
             exitItem.add(new JButton());
             exitMenu.add(exitItem);
@@ -92,7 +94,7 @@ class MainApplicationFrame extends JFrame {
         JMenu testMenu = createSubMenu("Тесты", KeyEvent.VK_T, "Тестовые команды");
 
         {
-            JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
+            JMenuItem addLogMessageItem = new JMenuItem("Сообще ние в лог", KeyEvent.VK_S);
             addLogMessageItem.addActionListener((event) -> Logger.debug("Новая строка"));
             testMenu.add(addLogMessageItem);
         }
