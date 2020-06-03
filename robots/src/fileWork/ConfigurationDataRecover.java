@@ -11,8 +11,8 @@ import java.util.*;
  */
 public class ConfigurationDataRecover {
 
-    private final String separator = System.getProperty("file.separator");
-    private final String absPath = System.getProperty("user.dir") + separator + "robots" + separator + "src" + separator + "configuration.txt";
+    private final String SEPARATOR = System.getProperty("file.separator");
+    private final String ABSOLUTE_PATH = System.getProperty("user.dir") + SEPARATOR + "robots" + SEPARATOR + "src" + SEPARATOR + "configuration.txt";
     private final Map<String, Map<String, Integer>> recoveredData;
 
     public ConfigurationDataRecover() {
@@ -52,7 +52,7 @@ public class ConfigurationDataRecover {
 
     private List<String> readFileData() {
         try {
-            List<String> inputData = Files.readAllLines(Paths.get(absPath));
+            List<String> inputData = Files.readAllLines(Paths.get(ABSOLUTE_PATH));
             List<String> splitData = new ArrayList<>();
             for (String line : inputData) {
                 splitData.addAll(Arrays.asList(line.split(" -> ")));
