@@ -9,19 +9,18 @@ import java.util.*;
 /**
  * Класс Восстановителя состояния, который восстанавливает геометрию окошек.
  */
-public class ConfigurationDataRecoverer {
+public class ConfigurationDataRecover {
 
-    private final String separator = System.getProperty("file.separator");
-    private final String absPath = System.getProperty("user.dir") + separator + "robots" + separator + "src" + separator + "configuration.txt";
-    private static Map<String, Map<String, Integer>> recoveredData;
+    private final String SEPARATOR = System.getProperty("file.separator");
+    private final String ABSOLUTE_PATH = System.getProperty("user.dir") + SEPARATOR + "robots" + SEPARATOR + "src" + SEPARATOR + "configuration.txt";
+    private final Map<String, Map<String, Integer>> recoveredData;
 
-    public ConfigurationDataRecoverer() throws IOException {
-        if (recoveredData == null) {
-            List<String> inputData = readFileData();
-            List<String> splitData = new ArrayList<>();
-            for (String line : inputData) {
-                splitData.addAll(Arrays.asList(line.split(" -> ")));
-            }
+    public ConfigurationDataRecover() {
+
+        List<String> splitData = readFileData();
+        if (splitData == null)
+            recoveredData = null;
+        else {
             recoveredData = new HashMap<>();
             for (int i = 0; i < splitData.size(); i += 2) {
                 String prefix = splitData.get(i).split("\\.")[0];
@@ -46,12 +45,21 @@ public class ConfigurationDataRecoverer {
     }
 
     public Map<String, Integer> getStatement(String windowName) {
-        return recoveredData.getOrDefault(windowName, null);
+        if (recoveredData != null)
+            return recoveredData.getOrDefault(windowName, null);
+        return null;
     }
 
-
-    private List<String> readFileData() throws IOException {
-        return Files.readAllLines(Paths.get(absPath));
+    private List<String> readFileData() {
+        try {
+            List<String> inputData = Files.readAllLines(Paths.get(ABSOLUTE_PATH));
+            List<String> splitData = new ArrayList<>();
+            for (String line : inputData) {
+                splitData.addAll(Arrays.asList(line.split(" -> ")));
+            }
+            return splitData;
+        } catch (IOException ex) {
+            return null;
+        }
     }
-
 }

@@ -1,25 +1,22 @@
 package gui;
 
-import fileWork.ConfigurationDataRecoverer;
-import fileWork.Tuple;
+import fileWork.ConfigurationDataRecover;
 import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class LogWindow extends JInternalFrame implements LogChangeListener, ProcessStatement {
-    private LogWindowSource m_logSource;
-    private TextArea m_logContent;
+    private final LogWindowSource m_logSource;
+    private final TextArea m_logContent;
     private final Map<String, Integer> previousStatement;
 
-    LogWindow(LogWindowSource logSource) {
+    LogWindow(LogWindowSource logSource,ConfigurationDataRecover recover) {
         super("Протокол работы", true, true, true, true);
-        previousStatement = recoverStatement();
+        previousStatement = recoverStatement("log",recover);
         m_logSource = logSource;
         m_logSource.registerListener(this);
         m_logContent = new TextArea("");
@@ -48,7 +45,6 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
         else {
             int previousWidth = previousStatement.get("width");
             int previousHeight = previousStatement.get("height");
-            boolean isClosed = previousStatement.get("isClosed") == 1;
             super.setSize(previousWidth, previousHeight);
         }
     }
@@ -66,35 +62,5 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
     @Override
     public void onLogChanged() {
         EventQueue.invokeLater(this::updateLogContent);
-    }
-
-    @Override
-    public Tuple<String, Map<String, String>> saveStatement() {
-        Point position = this.getLocation();
-        Dimension size = this.getSize();
-        Boolean isClosed = this.isClosed();
-        Map<String, String> statement = createStatementMap(position, size, isClosed);
-        return new Tuple<>("log", statement);
-    }
-
-    @Override
-    public Map<String, Integer> recoverStatement() {
-        try {
-            ConfigurationDataRecoverer recoverer = new ConfigurationDataRecoverer();
-            return recoverer.getStatement("log");
-        } catch (IOException ex) {
-            return null;
-        }
-    }
-
-    @Override
-    public Map<String, String> createStatementMap(Point position, Dimension size, Boolean isClosed) {
-        Map<String, String> result = new HashMap<>();
-        result.put("x", String.valueOf(position.x));
-        result.put("y", String.valueOf(position.y));
-        result.put("width", String.valueOf(size.width));
-        result.put("height", String.valueOf(size.height));
-        result.put("isClosed", String.valueOf(isClosed));
-        return result;
     }
 }

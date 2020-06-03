@@ -13,20 +13,19 @@ import java.util.Map;
 
 public class ConfigurationDataSaver {
     private Map<String, String> commonData;
-    private final String separator = System.getProperty("file.separator");
-    private final String absPath = System.getProperty("user.dir") + separator + "robots" + separator + "src" + separator + "configuration.txt";
+    private final String SEPARATOR = System.getProperty("file.separator");
+    private final String ABSOLUTE_PATH = System.getProperty("user.dir") + SEPARATOR + "robots" + SEPARATOR + "src" + SEPARATOR + "configuration.txt";
 
     public void saveData(List<Tuple<String, Map<String, String>>> data) {
         createMapFromMapsWithPrefixKeys(data);
         writeData();
     }
 
-
     private void writeData() {
-        File configureFile = new File(absPath);
+        File configureFile = new File(ABSOLUTE_PATH);
         try (FileWriter writer = new FileWriter(configureFile, false)) {
-            for (String key : commonData.keySet()) {
-                writer.write(key + " -> " + commonData.get(key) + "\n");
+            for (Map.Entry<String, String> pair : commonData.entrySet()) {
+                writer.write(pair.getKey() + " -> " + pair.getValue() + "\n");
             }
             writer.flush();
         } catch (IOException e) {

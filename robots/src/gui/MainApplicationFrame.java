@@ -1,5 +1,6 @@
 package gui;
 
+import fileWork.ConfigurationDataRecover;
 import fileWork.Tuple;
 import fileWork.ConfigurationDataSaver;
 import log.Logger;
@@ -18,6 +19,7 @@ class MainApplicationFrame extends JFrame {
     private final GameWindow gameWindow;
     private final RobotCoordinatesWindow robotCoordinatesWindow;
     private final GameModel gameModel;
+    private final ConfigurationDataRecover recover;
 
 
     MainApplicationFrame() {
@@ -27,22 +29,23 @@ class MainApplicationFrame extends JFrame {
                 screenSize.width - inset * 2,
                 screenSize.height - inset * 2);
 
+        recover = new ConfigurationDataRecover();
         desktopPane = new JDesktopPane();
         setContentPane(desktopPane);
         logWindow = createLogWindow();
         addWindow(logWindow);
         gameModel = new GameModel();
-        gameWindow = new GameWindow(gameModel);
+        gameWindow = new GameWindow(gameModel, recover);
         gameWindow.setLocation(1, 1);
         gameWindow.setSize(1200, 1200);
         addWindow(gameWindow);
-        robotCoordinatesWindow = new RobotCoordinatesWindow(gameModel);
+        robotCoordinatesWindow = new RobotCoordinatesWindow(gameModel, recover);
         addWindow(robotCoordinatesWindow);
         setJMenuBar(generateMenuBar());
     }
 
     private LogWindow createLogWindow() {
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
+        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), recover);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
         Logger.debug("Протокол работает");
@@ -140,9 +143,9 @@ class MainApplicationFrame extends JFrame {
 
     void saveStatement() {
         List<Tuple<String, Map<String, String>>> allWindowsConfigs = new ArrayList<>();
-        allWindowsConfigs.add(this.logWindow.saveStatement());
-        allWindowsConfigs.add(this.gameWindow.saveStatement());
-        allWindowsConfigs.add(this.robotCoordinatesWindow.saveStatement());
+        allWindowsConfigs.add(this.logWindow.saveStatement("log", this.logWindow));
+        allWindowsConfigs.add(this.gameWindow.saveStatement("model", this.gameWindow));
+        allWindowsConfigs.add(this.robotCoordinatesWindow.saveStatement("coordinates", this.robotCoordinatesWindow));
         ConfigurationDataSaver conf = new ConfigurationDataSaver();
         conf.saveData(allWindowsConfigs);
     }

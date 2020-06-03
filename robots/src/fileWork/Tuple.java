@@ -2,9 +2,6 @@ package fileWork;
 
 /**
  * Класс Кортеж - анлог кортежа из с#. Урезанная версия.
- *
- * @param <T1>
- * @param <T2>
  */
 
 public class Tuple<T1, T2> {

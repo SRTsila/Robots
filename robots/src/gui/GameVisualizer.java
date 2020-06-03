@@ -10,7 +10,7 @@ import java.util.TimerTask;
 
 public class GameVisualizer extends JPanel implements Observer {
     private final Timer m_timer = initTimer();
-    private GameModel gameModel;
+    private final GameModel gameModel;
     private GameStatement gameStatement;
 
 

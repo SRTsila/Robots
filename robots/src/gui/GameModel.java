@@ -56,14 +56,6 @@ class GameModel implements Model {
         } else {
             velocity = distance * Math.abs(angularVelocity) / 2;
         }
-
-//        if (angleToTarget > m_robotDirection) {
-//            angularVelocity = maxAngularVelocity;
-//        }
-//        if (angleToTarget < m_robotDirection) {
-//            angularVelocity = -maxAngularVelocity;
-//        }
-
         moveRobot(velocity, angularVelocity, 10);
     }
 
