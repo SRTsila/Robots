@@ -1,5 +1,6 @@
 package gui;
 
+import fileWork.ConfigurationDataRecover;
 import fileWork.Tuple;
 import fileWork.ConfigurationDataSaver;
 import log.Logger;
@@ -16,20 +17,20 @@ class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane;
     private final LogWindow logWindow;
     private final GameWindow gameWindow;
+    private final ConfigurationDataRecover recover;
 
-
-    MainApplicationFrame() {
+    MainApplicationFrame(){
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
                 screenSize.width - inset * 2,
                 screenSize.height - inset * 2);
-
+        recover = new ConfigurationDataRecover();
         desktopPane = new JDesktopPane();
         setContentPane(desktopPane);
         logWindow = createLogWindow();
         addWindow(logWindow);
-        gameWindow = new GameWindow();
+        gameWindow = new GameWindow(recover);
         gameWindow.setLocation(1, 1);
         gameWindow.setSize(1200, 1200);
         addWindow(gameWindow);
@@ -37,7 +38,7 @@ class MainApplicationFrame extends JFrame {
     }
 
     private LogWindow createLogWindow() {
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
+        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(),recover);
         logWindow.setLocation(10, 10);
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
@@ -138,8 +139,8 @@ class MainApplicationFrame extends JFrame {
 
     void saveStatement() {
         List<Tuple<String, Map<String, String>>> allWindowsConfigs = new ArrayList<>();
-        allWindowsConfigs.add(this.logWindow.saveStatement());
-        allWindowsConfigs.add(this.gameWindow.saveStatement());
+        allWindowsConfigs.add(this.logWindow.saveStatement("log", this.logWindow));
+        allWindowsConfigs.add(this.gameWindow.saveStatement("model", this.gameWindow));
         ConfigurationDataSaver conf = new ConfigurationDataSaver();
         conf.saveData(allWindowsConfigs);
     }
