@@ -11,10 +11,8 @@ import java.util.Map;
  * Класс запоминания состояния. Запоминает состояние окошек и записывает в файл configuration.txt
  */
 
-public class ConfigurationDataSaver {
+public class ConfigurationDataSaver implements FileWorker{
     private Map<String, String> commonData;
-    private final String SEPARATOR = System.getProperty("file.separator");
-    private final String ABSOLUTE_PATH = System.getProperty("user.dir") + SEPARATOR + "robots" + SEPARATOR + "src" + SEPARATOR + "configuration.txt";
 
     public void saveData(List<Tuple<String, Map<String, String>>> data) {
         createMapFromMapsWithPrefixKeys(data);

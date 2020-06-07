@@ -18,9 +18,7 @@ public interface ProcessStatement {
     }
 
     default Map<String, Integer> recoverStatement(String windowName, ConfigurationDataRecover recover) {
-        if (recover!=null)
-            return recover.getStatement(windowName);
-        return null;
+        return recover.getStatement(windowName);
     }
 
     default Map<String, String> createStatementMap(Point position, Dimension size, Boolean isClosed) {
