@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static fileWork.ConfigurationFile.ABSOLUTE_PATH;
+
 /**
  * Класс запоминания состояния. Запоминает состояние окошек и записывает в файл configuration.txt
  */
 
-public class ConfigurationDataSaver implements FileWorker{
+public class ConfigurationDataSaver {
     private Map<String, String> commonData;
 
     public void saveData(List<Tuple<String, Map<String, String>>> data) {

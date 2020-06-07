@@ -1,16 +1,18 @@
 package fileWork;
 
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import static fileWork.ConfigurationFile.ABSOLUTE_PATH;
+
 
 
 /**
  * Класс Восстановителя состояния, который восстанавливает геометрию окошек.
  */
-public class ConfigurationDataRecover implements FileWorker {
-
+public class ConfigurationDataRecover {
     private final Map<String, Map<String, Integer>> recoveredData;
 
     public ConfigurationDataRecover() {
