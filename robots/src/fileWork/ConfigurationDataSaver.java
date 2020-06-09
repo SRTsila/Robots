@@ -1,6 +1,7 @@
 package fileWork;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class ConfigurationDataSaver {
             }
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Impossible to create configuration file");
         }
     }
 

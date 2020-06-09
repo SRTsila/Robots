@@ -84,8 +84,6 @@ class MainApplicationFrame extends JFrame {
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             });
-
-            exitItem.add(new JButton());
             exitMenu.add(exitItem);
         }
         return exitMenu;
