@@ -19,6 +19,7 @@ public class RobotsProgram {
             frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             frame.addWindowListener(new WindowClosingAdapter());
             frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+            Runtime.getRuntime().addShutdownHook(new Thread(frame::saveStatement));
         });
     }
 

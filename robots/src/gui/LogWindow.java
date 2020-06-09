@@ -1,18 +1,22 @@
 package gui;
 
+import fileWork.ConfigurationDataRecover;
 import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener {
+public class LogWindow extends JInternalFrame implements LogChangeListener, ProcessStatement {
     private final LogWindowSource m_logSource;
     private final TextArea m_logContent;
+    private final Map<String, Integer> previousStatement;
 
-    LogWindow(LogWindowSource logSource) {
+    LogWindow(LogWindowSource logSource, ConfigurationDataRecover recover) {
         super("Протокол работы", true, true, true, true);
+        previousStatement = recoverStatement("log", recover);
         m_logSource = logSource;
         m_logSource.registerListener(this);
         m_logContent = new TextArea("");
@@ -34,6 +38,27 @@ public class LogWindow extends JInternalFrame implements LogChangeListener {
         m_logContent.invalidate();
     }
 
+    public void setSize(int width, int height) {
+        if (previousStatement == null)
+            super.setSize(width, height);
+        else {
+            int previousWidth = previousStatement.get("width");
+            int previousHeight = previousStatement.get("height");
+            boolean isClosed = previousStatement.get("isClosed") == 1;
+            super.setVisible(!isClosed);
+            super.setSize(previousWidth, previousHeight);
+        }
+    }
+
+    public void setLocation(int x, int y) {
+        if (previousStatement == null)
+            super.setLocation(x, y);
+        else {
+            int previousX = previousStatement.get("x");
+            int previousY = previousStatement.get("y");
+            super.setLocation(previousX, previousY);
+        }
+    }
 
     @Override
     public void onLogChanged() {

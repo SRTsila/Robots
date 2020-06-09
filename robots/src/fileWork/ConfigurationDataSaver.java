@@ -1,0 +1,39 @@
+package fileWork;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * Класс запоминания состояния. Запоминает состояние окошек и записывает в файл configuration.txt
+ */
+
+public class ConfigurationDataSaver {
+    private Map<String, String> commonData;
+
+    public void saveData(List<Tuple<String, Map<String, String>>> data) {
+        createMapFromMapsWithPrefixKeys(data);
+        writeData();
+    }
+
+    private void writeData() {
+        File configureFile = new File("configuration.txt");
+        try (FileWriter writer = new FileWriter(configureFile, false)) {
+            for (Map.Entry<String, String> pair : commonData.entrySet()) {
+                writer.write(pair.getKey() + " -> " + pair.getValue() + "\n");
+            }
+            writer.flush();
+        } catch (IOException e) {
+            System.out.println("Impossible to create configuration file");
+        }
+    }
+
+    private void createMapFromMapsWithPrefixKeys(List<Tuple<String, Map<String, String>>> maps) {
+        commonData = new HashMap<>();
+        maps.forEach(pair -> pair.getSecond().forEach((key, value) -> commonData.put(pair.getFirst() + "." + key, value)));
+    }
+}

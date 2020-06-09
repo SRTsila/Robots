@@ -1,44 +1,44 @@
 package gui;
 
+import fileWork.ConfigurationDataRecover;
+import fileWork.Tuple;
+import fileWork.ConfigurationDataSaver;
 import log.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.util.*;
+import java.util.List;
 
-/**
- * Что требуется сделать:
- * 1. Метод создания меню перегружен функционалом и трудно читается.
- * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
- */
+
 class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane;
     private final LogWindow logWindow;
     private final GameWindow gameWindow;
+    private final ConfigurationDataRecover recover;
 
-
-    MainApplicationFrame() {
-        //Make the big window be indented 50 pixels from each edge
-        //of the screen.
+    MainApplicationFrame(){
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
                 screenSize.width - inset * 2,
                 screenSize.height - inset * 2);
+        recover = new ConfigurationDataRecover();
         desktopPane = new JDesktopPane();
         setContentPane(desktopPane);
-
         logWindow = createLogWindow();
         addWindow(logWindow);
-        gameWindow = new GameWindow();
+        gameWindow = new GameWindow(recover);
+        gameWindow.setLocation(1, 1);
         gameWindow.setSize(1200, 1200);
         addWindow(gameWindow);
         setJMenuBar(generateMenuBar());
     }
 
     private LogWindow createLogWindow() {
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
+        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(),recover);
         logWindow.setLocation(10, 10);
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
@@ -84,8 +84,6 @@ class MainApplicationFrame extends JFrame {
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             });
-
-            exitItem.add(new JButton());
             exitMenu.add(exitItem);
         }
         return exitMenu;
@@ -95,10 +93,8 @@ class MainApplicationFrame extends JFrame {
         JMenu testMenu = createSubMenu("Тесты", KeyEvent.VK_T, "Тестовые команды");
 
         {
-            JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
-            addLogMessageItem.addActionListener((event) -> {
-                Logger.debug("Новая строка");
-            });
+            JMenuItem addLogMessageItem = new JMenuItem("Сообще ние в лог", KeyEvent.VK_S);
+            addLogMessageItem.addActionListener((event) -> Logger.debug("Новая строка"));
             testMenu.add(addLogMessageItem);
         }
         return testMenu;
@@ -128,6 +124,7 @@ class MainApplicationFrame extends JFrame {
         return lookAndFeelMenu;
     }
 
+
     private void setLookAndFeel(String className) {
         try {
             UIManager.setLookAndFeel(className);
@@ -138,4 +135,11 @@ class MainApplicationFrame extends JFrame {
         }
     }
 
+    void saveStatement() {
+        List<Tuple<String, Map<String, String>>> allWindowsConfigs = new ArrayList<>();
+        allWindowsConfigs.add(this.logWindow.saveStatement("log", this.logWindow));
+        allWindowsConfigs.add(this.gameWindow.saveStatement("model", this.gameWindow));
+        ConfigurationDataSaver conf = new ConfigurationDataSaver();
+        conf.saveData(allWindowsConfigs);
+    }
 }
