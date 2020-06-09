@@ -3,9 +3,6 @@ import javax.swing.*;
 import java.awt.*;
 
 import fileWork.ConfigurationDataRecover;
-
-import javax.swing.*;
-import java.awt.*;
 import java.util.Map;
 
 public class GameWindow extends JInternalFrame implements ProcessStatement {
@@ -16,7 +13,6 @@ public class GameWindow extends JInternalFrame implements ProcessStatement {
     {
         super("Игровое поле", true, true, true, true);
         previousStatement = recoverStatement("model",recover);
-        m_visualizer = new GameVisualizer();
         m_visualizer = new GameVisualizer();
 
         JPanel panel = new JPanel(new BorderLayout());
