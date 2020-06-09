@@ -28,7 +28,6 @@ class MainApplicationFrame extends JFrame {
         setBounds(inset, inset,
                 screenSize.width - inset * 2,
                 screenSize.height - inset * 2);
-
         recover = new ConfigurationDataRecover();
         desktopPane = new JDesktopPane();
         setContentPane(desktopPane);
@@ -89,6 +88,7 @@ class MainApplicationFrame extends JFrame {
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             });
+
             exitItem.add(new JButton());
             exitMenu.add(exitItem);
         }

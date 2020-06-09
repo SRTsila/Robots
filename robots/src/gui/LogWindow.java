@@ -1,5 +1,6 @@
 package gui;
 
+
 import fileWork.ConfigurationDataRecover;
 import log.LogChangeListener;
 import log.LogEntry;
@@ -15,6 +16,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
     private final Map<String, Integer> previousStatement;
 
     LogWindow(LogWindowSource logSource,ConfigurationDataRecover recover) {
+
         super("Протокол работы", true, true, true, true);
         previousStatement = recoverStatement("log",recover);
         m_logSource = logSource;
@@ -59,8 +61,10 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
         }
     }
 
+
     @Override
     public void onLogChanged() {
         EventQueue.invokeLater(this::updateLogContent);
     }
+
 }
