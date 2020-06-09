@@ -1,14 +1,12 @@
 package fileWork;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static fileWork.ConfigurationFile.ABSOLUTE_PATH;
 
 /**
  * Класс запоминания состояния. Запоминает состояние окошек и записывает в файл configuration.txt
@@ -23,7 +21,7 @@ public class ConfigurationDataSaver {
     }
 
     private void writeData() {
-        File configureFile = new File(ABSOLUTE_PATH);
+        File configureFile = new File("configuration.txt");
         try (FileWriter writer = new FileWriter(configureFile, false)) {
             for (Map.Entry<String, String> pair : commonData.entrySet()) {
                 writer.write(pair.getKey() + " -> " + pair.getValue() + "\n");
