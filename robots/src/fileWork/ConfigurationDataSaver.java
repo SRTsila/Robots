@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static fileWork.ConfigurationFile.ABSOLUTE_PATH;
+
 /**
  * Класс запоминания состояния. Запоминает состояние окошек и записывает в файл configuration.txt
  */
 
 public class ConfigurationDataSaver {
     private Map<String, String> commonData;
-    private final String SEPARATOR = System.getProperty("file.separator");
-    private final String ABSOLUTE_PATH = System.getProperty("user.dir") + SEPARATOR + "robots" + SEPARATOR + "src" + SEPARATOR + "configuration.txt";
 
     public void saveData(List<Tuple<String, Map<String, String>>> data) {
         createMapFromMapsWithPrefixKeys(data);

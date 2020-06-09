@@ -1,53 +1,48 @@
 package fileWork;
 
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import static fileWork.ConfigurationFile.ABSOLUTE_PATH;
+
 
 
 /**
  * Класс Восстановителя состояния, который восстанавливает геометрию окошек.
  */
 public class ConfigurationDataRecover {
-
-    private final String SEPARATOR = System.getProperty("file.separator");
-    private final String ABSOLUTE_PATH = System.getProperty("user.dir") + SEPARATOR + "robots" + SEPARATOR + "src" + SEPARATOR + "configuration.txt";
     private final Map<String, Map<String, Integer>> recoveredData;
 
     public ConfigurationDataRecover() {
 
         List<String> splitData = readFileData();
-        if (splitData == null)
-            recoveredData = null;
-        else {
-            recoveredData = new HashMap<>();
-            for (int i = 0; i < splitData.size(); i += 2) {
-                String prefix = splitData.get(i).split("\\.")[0];
-                String key = splitData.get(i).split("\\.")[1];
-                String strValue = splitData.get(i + 1);
-                int value;
+        recoveredData = new HashMap<>();
+        for (int i = 0; i < splitData.size(); i += 2) {
+            String prefix = splitData.get(i).split("\\.")[0];
+            String key = splitData.get(i).split("\\.")[1];
+            String strValue = splitData.get(i + 1);
+            int value;
 
-                if (!key.startsWith("isClosed"))
-                    value = Integer.parseInt(strValue);
-                else
-                    value = strValue.startsWith("true") ? 1 : 0;
+            if (!key.startsWith("isClosed"))
+                value = Integer.parseInt(strValue);
+            else
+                value = strValue.startsWith("true") ? 1 : 0;
 
-                if (recoveredData.getOrDefault(prefix, null) != null)
-                    recoveredData.get(prefix).put(key, value);
-                else {
-                    Map<String, Integer> map = new HashMap<>();
-                    map.put(key, value);
-                    recoveredData.put(prefix, map);
-                }
+            if (recoveredData.getOrDefault(prefix, null) != null)
+                recoveredData.get(prefix).put(key, value);
+            else {
+                Map<String, Integer> map = new HashMap<>();
+                map.put(key, value);
+                recoveredData.put(prefix, map);
             }
         }
     }
 
+
     public Map<String, Integer> getStatement(String windowName) {
-        if (recoveredData != null)
-            return recoveredData.getOrDefault(windowName, null);
-        return null;
+        return recoveredData.getOrDefault(windowName, null);
     }
 
     private List<String> readFileData() {
@@ -59,7 +54,8 @@ public class ConfigurationDataRecover {
             }
             return splitData;
         } catch (IOException ex) {
-            return null;
+            System.out.println("Didn't find configuration file");
+            return Collections.emptyList();
         }
     }
 }
