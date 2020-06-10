@@ -12,7 +12,7 @@ public interface ProcessStatement {
     default Tuple<String, Map<String, String>> saveStatement(String windowName, JInternalFrame window) {
         Point position = window.getLocation();
         Dimension size = window.getSize();
-        Boolean isClosed = window.isClosed();
+        Boolean isClosed = window.isIcon();
         Map<String, String> statement = createStatementMap(position, size, isClosed);
         return new Tuple<>(windowName, statement);
     }

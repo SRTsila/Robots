@@ -6,6 +6,7 @@ import fileWork.ConfigurationDataRecover;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyVetoException;
 import java.util.Map;
 
 public class GameWindow extends JInternalFrame implements ProcessStatement {
@@ -27,8 +28,13 @@ public class GameWindow extends JInternalFrame implements ProcessStatement {
         if (previousStatement == null)
             super.setSize(width, height);
         else {
+            boolean isClosed = previousStatement.get("isClosed") == 1;
             int previousWidth = previousStatement.get("width");
             int previousHeight = previousStatement.get("height");
+            try {
+                this.setIcon(isClosed);
+            } catch (PropertyVetoException ignored) {
+            }
             super.setSize(previousWidth, previousHeight);
         }
     }

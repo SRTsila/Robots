@@ -29,7 +29,7 @@ public class ConfigurationDataSaver {
             }
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Impossible to create configuration file");
         }
     }
 

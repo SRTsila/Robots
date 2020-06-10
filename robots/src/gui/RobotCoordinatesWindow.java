@@ -1,13 +1,10 @@
 package gui;
 
 import fileWork.ConfigurationDataRecover;
-import fileWork.Tuple;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 class RobotCoordinatesWindow extends JInternalFrame implements Observer, ProcessStatement {
@@ -16,9 +13,9 @@ class RobotCoordinatesWindow extends JInternalFrame implements Observer, Process
     private final Map<String, Integer> previousStatement;
 
 
-    RobotCoordinatesWindow(GameModel gameModel,ConfigurationDataRecover recover) {
+    RobotCoordinatesWindow(GameModel gameModel, ConfigurationDataRecover recover) {
         super("Координаты робота", true, true, true, true);
-        previousStatement = recoverStatement("coordinates",recover);
+        previousStatement = recoverStatement("coordinates", recover);
         setSize(200, 200);
         setLocation(5, 10);
         setVisible(true);
@@ -28,18 +25,6 @@ class RobotCoordinatesWindow extends JInternalFrame implements Observer, Process
         this.gameModel.attach(this);
     }
 
-    public void setVisible(boolean visible){
-        if (previousStatement == null)
-            super.setVisible(visible);
-        else {
-            boolean isClosed = previousStatement.get("isClosed") == 1;
-            try {
-                super.setClosed(isClosed);
-            } catch (PropertyVetoException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public void setSize(int width, int height) {
         if (previousStatement == null)
@@ -48,6 +33,10 @@ class RobotCoordinatesWindow extends JInternalFrame implements Observer, Process
             int previousWidth = previousStatement.get("width");
             int previousHeight = previousStatement.get("height");
             boolean isClosed = previousStatement.get("isClosed") == 1;
+            try {
+                this.setIcon(isClosed);
+            } catch (PropertyVetoException ignored) {
+            }
             super.setVisible(!isClosed);
             super.setSize(previousWidth, previousHeight);
         }
