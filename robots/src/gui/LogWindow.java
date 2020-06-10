@@ -1,6 +1,5 @@
 package gui;
 
-
 import fileWork.ConfigurationDataRecover;
 import log.LogChangeListener;
 import log.LogEntry;
@@ -66,7 +65,6 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
             super.setLocation(previousX, previousY);
         }
     }
-
 
     @Override
     public void onLogChanged() {

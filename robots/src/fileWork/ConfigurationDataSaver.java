@@ -9,6 +9,7 @@ import java.util.Map;
 
 import static fileWork.ConfigurationFile.ABSOLUTE_PATH;
 
+
 /**
  * Класс запоминания состояния. Запоминает состояние окошек и записывает в файл configuration.txt
  */
@@ -38,3 +39,4 @@ public class ConfigurationDataSaver {
         maps.forEach(pair -> pair.getSecond().forEach((key, value) -> commonData.put(pair.getFirst() + "." + key, value)));
     }
 }
+
