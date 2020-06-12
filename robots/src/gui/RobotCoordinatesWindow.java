@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 class RobotCoordinatesWindow extends JInternalFrame implements Observer, ProcessStatement {
     private final TextArea textArea;
@@ -13,8 +14,8 @@ class RobotCoordinatesWindow extends JInternalFrame implements Observer, Process
     private final Map<String, Integer> previousStatement;
 
 
-    RobotCoordinatesWindow(GameModel gameModel, ConfigurationDataRecover recover) {
-        super("Координаты робота", true, true, true, true);
+    RobotCoordinatesWindow(GameModel gameModel, ConfigurationDataRecover recover, ResourceBundle res) {
+        super(res.getString("robotCoordinatesWindowName"), true, true, true, true);
         previousStatement = recoverStatement("coordinates", recover);
         setSize(200, 200);
         setLocation(5, 10);

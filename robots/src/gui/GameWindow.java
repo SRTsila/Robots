@@ -8,14 +8,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class GameWindow extends JInternalFrame implements ProcessStatement {
     private final GameVisualizer m_visualizer;
     private final Map<String, Integer> previousStatement;
 
 
-    GameWindow(GameModel gameModel, ConfigurationDataRecover recover) {
-        super("Игровое поле", true, true, true, true);
+    GameWindow(GameModel gameModel, ConfigurationDataRecover recover, ResourceBundle res) {
+        super(res.getString("gameWindowName"), true, true, true, true);
         previousStatement = recoverStatement("model", recover);
         m_visualizer = new GameVisualizer(gameModel);
         JPanel panel = new JPanel(new BorderLayout());

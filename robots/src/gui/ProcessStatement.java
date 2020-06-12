@@ -7,8 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public interface ProcessStatement {
+
     default Tuple<String, Map<String, String>> saveStatement(String windowName, JInternalFrame window) {
         Point position = window.getLocation();
         Dimension size = window.getSize();
@@ -18,7 +20,7 @@ public interface ProcessStatement {
     }
 
     default Map<String, Integer> recoverStatement(String windowName, ConfigurationDataRecover recover) {
-        if (recover!=null)
+        if (recover != null)
             return recover.getStatement(windowName);
         return null;
     }

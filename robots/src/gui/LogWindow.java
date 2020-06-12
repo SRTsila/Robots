@@ -9,15 +9,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class LogWindow extends JInternalFrame implements LogChangeListener, ProcessStatement {
     private final LogWindowSource m_logSource;
     private final TextArea m_logContent;
     private final Map<String, Integer> previousStatement;
 
-    LogWindow(LogWindowSource logSource, ConfigurationDataRecover recover) {
+    LogWindow(LogWindowSource logSource, ConfigurationDataRecover recover, ResourceBundle res) {
 
-        super("Протокол работы", true, true, true, true);
+        super(res.getString("logWindowName"), true, true, true, true);
         previousStatement = recoverStatement("log", recover);
         m_logSource = logSource;
         m_logSource.registerListener(this);

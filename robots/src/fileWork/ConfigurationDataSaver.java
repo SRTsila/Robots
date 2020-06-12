@@ -17,17 +17,19 @@ import static fileWork.ConfigurationFile.ABSOLUTE_PATH;
 public class ConfigurationDataSaver {
     private Map<String, String> commonData;
 
-    public void saveData(List<Tuple<String, Map<String, String>>> data) {
+    public void saveData(List<Tuple<String, Map<String, String>>> data, String location) {
         createMapFromMapsWithPrefixKeys(data);
-        writeData();
+        writeData(location);
     }
 
-    private void writeData() {
+
+    private void writeData(String location) {
         File configureFile = new File(ABSOLUTE_PATH);
         try (FileWriter writer = new FileWriter(configureFile, false)) {
             for (Map.Entry<String, String> pair : commonData.entrySet()) {
                 writer.write(pair.getKey() + " -> " + pair.getValue() + "\n");
             }
+            writer.write("location -> " + location);
             writer.flush();
         } catch (IOException e) {
             System.out.println("Impossible to create configuration file");
