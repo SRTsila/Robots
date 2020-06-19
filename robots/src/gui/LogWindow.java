@@ -7,7 +7,9 @@ import log.LogWindowSource;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyVetoException;
 import java.util.Map;
+
 
 public class LogWindow extends JInternalFrame implements LogChangeListener, ProcessStatement {
     private final LogWindowSource m_logSource;
@@ -15,11 +17,13 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
     private final Map<String, Integer> previousStatement;
 
     LogWindow(LogWindowSource logSource, ConfigurationDataRecover recover) {
+
         super("Протокол работы", true, true, true, true);
         previousStatement = recoverStatement("log", recover);
         m_logSource = logSource;
         m_logSource.registerListener(this);
         m_logContent = new TextArea("");
+        m_logContent.setLocation(0, 215);
         m_logContent.setSize(200, 500);
 
         JPanel panel = new JPanel(new BorderLayout());
@@ -42,16 +46,19 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
         if (previousStatement == null)
             super.setSize(width, height);
         else {
+            boolean isClosed = previousStatement.get("isClosed") == 1;
             int previousWidth = previousStatement.get("width");
             int previousHeight = previousStatement.get("height");
-            boolean isClosed = previousStatement.get("isClosed") == 1;
-            super.setVisible(!isClosed);
+            try {
+                this.setIcon(isClosed);
+            } catch (PropertyVetoException ignored) {
+            }
             super.setSize(previousWidth, previousHeight);
         }
     }
 
     public void setLocation(int x, int y) {
-        if (previousStatement == null)
+        if (previousStatement.isEmpty())
             super.setLocation(x, y);
         else {
             int previousX = previousStatement.get("x");

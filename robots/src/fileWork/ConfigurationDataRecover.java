@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import static fileWork.ConfigurationFile.ABSOLUTE_PATH;
 
+import static fileWork.ConfigurationFile.ABSOLUTE_PATH;
 
 
 /**
@@ -14,6 +14,8 @@ import static fileWork.ConfigurationFile.ABSOLUTE_PATH;
  */
 public class ConfigurationDataRecover {
     private final Map<String, Map<String, Integer>> recoveredData;
+    private String location = "ru";
+
 
     public ConfigurationDataRecover() {
 
@@ -45,11 +47,19 @@ public class ConfigurationDataRecover {
         return recoveredData.getOrDefault(windowName, null);
     }
 
+    public String getLocation() {
+        return location;
+    }
+
     private List<String> readFileData() {
         try {
             List<String> inputData = Files.readAllLines(Paths.get(ABSOLUTE_PATH));
             List<String> splitData = new ArrayList<>();
             for (String line : inputData) {
+                if (line.startsWith("location")) {
+                    location = line.substring(12);
+                    continue;
+                }
                 splitData.addAll(Arrays.asList(line.split(" -> ")));
             }
             return splitData;
@@ -59,4 +69,3 @@ public class ConfigurationDataRecover {
         }
     }
 }
-

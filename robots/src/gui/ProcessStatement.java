@@ -5,20 +5,26 @@ import fileWork.Tuple;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
+/**
+ * Интерфейс для окон для сохранения/восстановления положения(координаты), состояния(свернуто/развернуто) и размера.
+ */
 
 public interface ProcessStatement {
+
     default Tuple<String, Map<String, String>> saveStatement(String windowName, JInternalFrame window) {
         Point position = window.getLocation();
         Dimension size = window.getSize();
-        Boolean isClosed = window.isClosed();
+        Boolean isClosed = window.isIcon();
         Map<String, String> statement = createStatementMap(position, size, isClosed);
         return new Tuple<>(windowName, statement);
     }
 
     default Map<String, Integer> recoverStatement(String windowName, ConfigurationDataRecover recover) {
-        return recover.getStatement(windowName);
+        if (recover != null)
+            return recover.getStatement(windowName);
+        return Collections.emptyMap();
     }
 
     default Map<String, String> createStatementMap(Point position, Dimension size, Boolean isClosed) {

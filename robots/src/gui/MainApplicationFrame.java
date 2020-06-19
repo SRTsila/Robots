@@ -17,30 +17,36 @@ class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane;
     private final LogWindow logWindow;
     private final GameWindow gameWindow;
+    private final RobotCoordinatesWindow robotCoordinatesWindow;
+    private final GameModel gameModel;
     private final ConfigurationDataRecover recover;
+    private String location;
 
-    MainApplicationFrame(){
+
+    MainApplicationFrame() {
+        recover = new ConfigurationDataRecover();
+        location = recover.getLocation();
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
                 screenSize.width - inset * 2,
                 screenSize.height - inset * 2);
-        recover = new ConfigurationDataRecover();
         desktopPane = new JDesktopPane();
         setContentPane(desktopPane);
         logWindow = createLogWindow();
         addWindow(logWindow);
-        gameWindow = new GameWindow(recover);
+        gameModel = new GameModel();
+        gameWindow = new GameWindow(gameModel, recover);
         gameWindow.setLocation(1, 1);
         gameWindow.setSize(1200, 1200);
         addWindow(gameWindow);
+        robotCoordinatesWindow = new RobotCoordinatesWindow(gameModel, recover);
+        addWindow(robotCoordinatesWindow);
         setJMenuBar(generateMenuBar());
     }
 
     private LogWindow createLogWindow() {
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(),recover);
-        logWindow.setLocation(10, 10);
-        logWindow.setSize(300, 800);
+        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), recover);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
         Logger.debug("Протокол работает");
@@ -68,7 +74,6 @@ class MainApplicationFrame extends JFrame {
         JMenu lookAndFeelMenu = createLookAndFeelMenu();
         JMenu testMenu = createTestMenu();
         JMenu exitMenu = createExitMenu();
-
         menuBar.add(lookAndFeelMenu);
         menuBar.add(testMenu);
         menuBar.add(exitMenu);
@@ -84,6 +89,7 @@ class MainApplicationFrame extends JFrame {
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             });
+
             exitMenu.add(exitItem);
         }
         return exitMenu;
@@ -93,12 +99,13 @@ class MainApplicationFrame extends JFrame {
         JMenu testMenu = createSubMenu("Тесты", KeyEvent.VK_T, "Тестовые команды");
 
         {
-            JMenuItem addLogMessageItem = new JMenuItem("Сообще ние в лог", KeyEvent.VK_S);
+            JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
             addLogMessageItem.addActionListener((event) -> Logger.debug("Новая строка"));
             testMenu.add(addLogMessageItem);
         }
         return testMenu;
     }
+
 
     private JMenu createLookAndFeelMenu() {
         JMenu lookAndFeelMenu = createSubMenu("Режим отображения", KeyEvent.VK_V,
@@ -139,7 +146,8 @@ class MainApplicationFrame extends JFrame {
         List<Tuple<String, Map<String, String>>> allWindowsConfigs = new ArrayList<>();
         allWindowsConfigs.add(this.logWindow.saveStatement("log", this.logWindow));
         allWindowsConfigs.add(this.gameWindow.saveStatement("model", this.gameWindow));
+        allWindowsConfigs.add(this.robotCoordinatesWindow.saveStatement("coordinates", this.robotCoordinatesWindow));
         ConfigurationDataSaver conf = new ConfigurationDataSaver();
-        conf.saveData(allWindowsConfigs);
+        conf.saveData(allWindowsConfigs, location);
     }
 }

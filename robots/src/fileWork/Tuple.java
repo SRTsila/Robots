@@ -1,8 +1,9 @@
 package fileWork;
 
 /**
- * Класс Кортеж - аналог кортежа из с#. Урезанная версия.
- **/
+ * Класс Кортеж - анлог кортежа из с#. Урезанная версия.
+ */
+
 
 public class Tuple<T1, T2> {
     private T1 first;
@@ -13,11 +14,11 @@ public class Tuple<T1, T2> {
         this.second = second;
     }
 
-    T1 getFirst() {
+    public T1 getFirst() {
         return first;
     }
 
-    T2 getSecond() {
+    public T2 getSecond() {
         return second;
     }
 }
