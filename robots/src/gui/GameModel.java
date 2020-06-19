@@ -1,17 +1,24 @@
 package gui;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Модель робота (код получения координат и моделирования движения)
+ * обозреваемый объект (Observable),
+ * чтобы затем окно могло подписаться на уведомления от модели и
+ * обновлять свое состояние
+ */
 class GameModel implements Model {
-    private final ArrayList<Observer> observers = new ArrayList<>();
+    private final List<Observer> observers = new CopyOnWriteArrayList<>();
 
-    private volatile double m_robotPositionX = 100;
-    private volatile double m_robotPositionY = 100;
-    private volatile double m_robotDirection = 0;
+    private volatile double robotPositionX = 100;
+    private volatile double robotPositionY = 100;
+    private volatile double robotDirection = 0;
 
-    private volatile int m_targetPositionX = 150;
-    private volatile int m_targetPositionY = 100;
+    private volatile int targetPositionX = 150;
+    private volatile int targetPositionY = 100;
 
     private static final double maxVelocity = 0.1;
     private static final double maxAngularVelocity = 0.001;
@@ -31,19 +38,19 @@ class GameModel implements Model {
     }
 
     void setTargetPosition(Point p) {
-        m_targetPositionX = p.x;
-        m_targetPositionY = p.y;
+        targetPositionX = p.x;
+        targetPositionY = p.y;
     }
 
     void onModelUpdateEvent() {
-        double distance = distance(m_targetPositionX, m_targetPositionY,
-                m_robotPositionX, m_robotPositionY);
+        double distance = distance(targetPositionX, targetPositionY,
+                robotPositionX, robotPositionY);
         if (distance < 0.5) {
             return;
         }
         double velocity = maxVelocity;
-        double angleToTarget = angleTo(m_robotPositionX, m_robotPositionY, m_targetPositionX, m_targetPositionY);
-        double angleBetweenRobotAnTarget = asNormalizedRadians(angleToTarget - m_robotDirection);
+        double angleToTarget = angleTo(robotPositionX, robotPositionY, targetPositionX, targetPositionY);
+        double angleBetweenRobotAnTarget = asNormalizedRadians(angleToTarget - robotDirection);
         double angularVelocity = 0;
 
         if (angleBetweenRobotAnTarget < Math.PI) {
@@ -71,22 +78,22 @@ class GameModel implements Model {
     private void moveRobot(double velocity, double angularVelocity, double duration) {
         velocity = applyLimits(velocity, 0, maxVelocity);
         angularVelocity = applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
-        double newX = m_robotPositionX + velocity / angularVelocity *
-                (Math.sin(m_robotDirection + angularVelocity * duration) -
-                        Math.sin(m_robotDirection));
+        double newX = robotPositionX + velocity / angularVelocity *
+                (Math.sin(robotDirection + angularVelocity * duration) -
+                        Math.sin(robotDirection));
         if (!Double.isFinite(newX)) {
-            newX = m_robotPositionX + velocity * duration * Math.cos(m_robotDirection);
+            newX = robotPositionX + velocity * duration * Math.cos(robotDirection);
         }
-        double newY = m_robotPositionY - velocity / angularVelocity *
-                (Math.cos(m_robotDirection + angularVelocity * duration) -
-                        Math.cos(m_robotDirection));
+        double newY = robotPositionY - velocity / angularVelocity *
+                (Math.cos(robotDirection + angularVelocity * duration) -
+                        Math.cos(robotDirection));
         if (!Double.isFinite(newY)) {
-            newY = m_robotPositionY + velocity * duration * Math.sin(m_robotDirection);
+            newY = robotPositionY + velocity * duration * Math.sin(robotDirection);
         }
-        m_robotPositionX = newX;
-        m_robotPositionY = newY;
-        double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration);
-        m_robotDirection = newDirection;
+        robotPositionX = newX;
+        robotPositionY = newY;
+        double newDirection = asNormalizedRadians(robotDirection + angularVelocity * duration);
+        robotDirection = newDirection;
         notifyAllObservers();
     }
 
@@ -108,12 +115,12 @@ class GameModel implements Model {
     @Override
     public void notifyAllObservers() {
         for (Observer observer : observers)
-            observer.update();
+            observer.onUpdate();
     }
 
     @Override
     public GameStatement getState() {
-        return new GameStatement(m_robotPositionX, m_robotPositionY, m_robotDirection, m_targetPositionX, m_targetPositionY);
+        return new GameStatement(robotPositionX, robotPositionY, robotDirection, targetPositionX, targetPositionY);
     }
 
 }

@@ -4,8 +4,6 @@ import java.awt.*;
 
 import fileWork.ConfigurationDataRecover;
 
-import javax.swing.*;
-import java.awt.*;
 import java.beans.PropertyVetoException;
 import java.util.Map;
 import java.util.ResourceBundle;

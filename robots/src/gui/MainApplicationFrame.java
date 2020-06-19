@@ -116,7 +116,6 @@ class MainApplicationFrame extends JFrame {
         JMenu locationMenu = createSubMenu(res.getString("ChoiceLocationMenuName"), KeyEvent.VK_T,
                 res.getString("ChoiceLocationMenuSubMenuName"));
         String[] languages = new String[]{"ru", "en"};
-        location = "";
         {
             JMenuItem menuItem = new JMenuItem(res.getString("ChoiceLocationMenuSubMenuName"), KeyEvent.VK_S);
             menuItem.addActionListener(e -> {

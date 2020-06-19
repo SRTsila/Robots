@@ -1,11 +1,14 @@
 package gui;
 
 /**
- *
+ * Интерфейс обозреваемого объекта, который информирует своих подписчиков об обновлениях.
  */
 
 public interface Model {
-    public void attach(Observer observer);
-    public void notifyAllObservers();
-    public GameStatement getState();
+
+    void attach(Observer observer);
+
+    void notifyAllObservers();
+
+    GameStatement getState();
 }

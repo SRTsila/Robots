@@ -1,5 +1,10 @@
 package gui;
 
+/**
+ * Интерфейс обозреватель с методом реакции на обновление модели.
+ */
+
+
 public interface Observer {
-    public void update();
+    void onUpdate();
 }

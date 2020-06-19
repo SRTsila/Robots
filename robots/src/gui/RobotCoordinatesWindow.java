@@ -12,6 +12,8 @@ class RobotCoordinatesWindow extends JInternalFrame implements Observer, Process
     private final TextArea textArea;
     private final GameModel gameModel;
     private final Map<String, Integer> previousStatement;
+    private double targetPositionX = 0.0;
+    private double targetPositionY = 0.0;
 
 
     RobotCoordinatesWindow(GameModel gameModel, ConfigurationDataRecover recover, ResourceBundle res) {
@@ -54,9 +56,21 @@ class RobotCoordinatesWindow extends JInternalFrame implements Observer, Process
     }
 
     @Override
-    public void update() {
+    public void onUpdate() {
         GameStatement gameStatement = gameModel.getState();
-        textArea.append("X: " + gameStatement.m_robotPositionX + "\n"
-                + "Y: " + gameStatement.m_robotPositionY + "\n");
+        if (Math.abs(targetPositionX - gameStatement.getTargetPositionX()) > 0.1 ||
+                Math.abs(targetPositionY - gameStatement.getTargetPositionY()) > 0.1) {
+            targetPositionX = gameStatement.getTargetPositionX();
+            targetPositionY = gameStatement.getTargetPositionY();
+            textArea.setText("");
+            textArea.append(
+                    "Start Position\n" +
+                            "\nX: " + gameStatement.getRobotPositionX() +
+                            "\nY: " + gameStatement.getRobotPositionY() +
+                            "\nDirection: " + gameStatement.getRobotDirection() +
+                            "\n\nFinish Position\n" + "X: " + targetPositionX +
+                            "\nY: " + targetPositionY
+            );
+        }
     }
 }
