@@ -1,49 +1,33 @@
 package log;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class LogQueue<T> implements Iterable{
-    private Queue<T> queue;
+public class LogQueue<T> implements Iterable<T> {
+    private final LinkedList<T> queue;
     private final int maxSize;
 
     LogQueue(int maxSize) {
         this.maxSize = maxSize;
-        queue = new ConcurrentLinkedQueue<T>();
+        queue = new LinkedList<>();
     }
 
-    void add(T element) {
+    synchronized void add(T element) {
         if (!(queue.size() < maxSize)) {
             queue.poll();
         }
         queue.add(element);
     }
 
-    int size() {
+    synchronized int size() {
         return queue.size();
     }
 
-    List<T> subList(int start, int finish) {
-        ArrayList<T> list = toArray();
-        return list.subList(start, finish);
-    }
-
-    private ArrayList<T> toArray() {
-        ArrayList<T> result = new ArrayList<>();
-        Queue<T> currentQueue = queue;
-        while (true) {
-            try {
-                result.add(currentQueue.remove());
-            } catch (NoSuchElementException e) {
-                break;
-            }
-
-        }
-        return result;
+    synchronized List<T> subList(int start, int finish) {
+        return new ArrayList<>(queue.subList(start, finish));
     }
 
     @Override
-    public Iterator iterator() {
+    public synchronized Iterator<T> iterator() {
         return queue.iterator();
     }
 }

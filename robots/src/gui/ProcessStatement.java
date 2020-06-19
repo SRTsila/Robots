@@ -5,9 +5,7 @@ import fileWork.Tuple;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public interface ProcessStatement {
 
@@ -22,7 +20,7 @@ public interface ProcessStatement {
     default Map<String, Integer> recoverStatement(String windowName, ConfigurationDataRecover recover) {
         if (recover != null)
             return recover.getStatement(windowName);
-        return null;
+        return Collections.emptyMap();
     }
 
     default Map<String, String> createStatementMap(Point position, Dimension size, Boolean isClosed) {

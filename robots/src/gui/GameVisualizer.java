@@ -30,7 +30,7 @@ public class GameVisualizer extends JPanel implements Observer {
         m_timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                update();
+                onUpdate();
             }
         }, 0, 10);
         addMouseListener(new MouseAdapter() {
@@ -55,8 +55,8 @@ public class GameVisualizer extends JPanel implements Observer {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        drawRobot(g2d, round(gameStatement.m_robotPositionX), round(gameStatement.m_robotPositionY), gameStatement.m_robotDirection);
-        drawTarget(g2d, gameStatement.m_targetPositionX, gameStatement.m_targetPositionY);
+        drawRobot(g2d, round(gameStatement.getRobotPositionX()), round(gameStatement.getRobotPositionY()), gameStatement.getRobotDirection());
+        drawTarget(g2d, gameStatement.getTargetPositionX(), gameStatement.getTargetPositionY());
     }
 
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
@@ -68,8 +68,8 @@ public class GameVisualizer extends JPanel implements Observer {
     }
 
     private void drawRobot(Graphics2D g, int x, int y, double direction) {
-        int robotCenterX = round(gameStatement.m_robotPositionX);
-        int robotCenterY = round(gameStatement.m_robotPositionY);
+        int robotCenterX = round(gameStatement.getRobotPositionX());
+        int robotCenterY = round(gameStatement.getRobotPositionY());
         AffineTransform t = AffineTransform.getRotateInstance(direction, robotCenterX, robotCenterY);
         g.setTransform(t);
         g.setColor(Color.MAGENTA);
@@ -93,7 +93,7 @@ public class GameVisualizer extends JPanel implements Observer {
 
 
     @Override
-    public void update() {
+    public void onUpdate() {
         this.gameStatement = gameModel.getState();
         gameModel.onModelUpdateEvent();
     }

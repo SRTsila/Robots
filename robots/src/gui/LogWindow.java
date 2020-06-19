@@ -43,7 +43,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
     }
 
     public void setSize(int width, int height) {
-        if (previousStatement == null)
+        if (previousStatement.isEmpty())
             super.setSize(width, height);
         else {
             boolean isClosed = previousStatement.get("isClosed") == 1;
@@ -58,7 +58,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
     }
 
     public void setLocation(int x, int y) {
-        if (previousStatement == null)
+        if (previousStatement.isEmpty())
             super.setLocation(x, y);
         else {
             int previousX = previousStatement.get("x");

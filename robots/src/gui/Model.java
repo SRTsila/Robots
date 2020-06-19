@@ -1,11 +1,10 @@
 package gui;
 
-/**
- *
- */
 
 public interface Model {
-    public void attach(Observer observer);
-    public void notifyAllObservers();
-    public GameStatement getState();
+    void attach(Observer observer);
+
+    void notifyAllObservers();
+
+    GameStatement getState();
 }
