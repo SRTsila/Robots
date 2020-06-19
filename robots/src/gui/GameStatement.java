@@ -5,11 +5,11 @@ package gui;
  */
 
 class GameStatement {
-    private double robotPositionX;
-    private double robotPositionY;
-    private double robotDirection;
-    private int targetPositionX;
-    private int targetPositionY;
+    private final double robotPositionX;
+    private final double robotPositionY;
+    private final double robotDirection;
+    private final int targetPositionX;
+    private final int targetPositionY;
 
     GameStatement(double robotPositionX, double robotPositionY, double robotDirection, int targetPositionX, int targetPositionY) {
         this.robotPositionX = robotPositionX;

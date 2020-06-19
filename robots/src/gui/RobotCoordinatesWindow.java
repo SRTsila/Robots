@@ -32,7 +32,7 @@ class RobotCoordinatesWindow extends JInternalFrame implements Observer, Process
 
 
     public void setSize(int width, int height) {
-        if (previousStatement.isEmpty())
+        if (previousStatement == null)
             super.setSize(200, 200);
         else {
             int previousWidth = previousStatement.get("width");
@@ -48,7 +48,7 @@ class RobotCoordinatesWindow extends JInternalFrame implements Observer, Process
     }
 
     public void setLocation(int x, int y) {
-        if (previousStatement.isEmpty())
+        if (previousStatement == null)
             super.setLocation(x, y);
         else {
             int previousX = previousStatement.get("x");
