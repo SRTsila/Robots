@@ -8,6 +8,11 @@ import java.awt.geom.AffineTransform;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Логика отображения робота (визуализация)
+ */
+
+
 public class GameVisualizer extends JPanel implements Observer {
     private final Timer m_timer = initTimer();
     private final GameModel gameModel;

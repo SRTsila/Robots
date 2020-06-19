@@ -84,7 +84,7 @@ class MainApplicationFrame extends JFrame {
         JMenu exitMenu = createSubMenu("Выход", KeyEvent.VK_E, "Закрытие приложения");
 
         {
-            JMenuItem exitItem = new JMenuItem(res.getString("ExitMenuSubMenuText"), KeyEvent.VK_X | KeyEvent.VK_ALT);
+            JMenuItem exitItem = new JMenuItem("Завершить работу", KeyEvent.VK_X | KeyEvent.VK_ALT);
             exitItem.addActionListener((event) -> {
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
@@ -99,7 +99,7 @@ class MainApplicationFrame extends JFrame {
         JMenu testMenu = createSubMenu("Тесты", KeyEvent.VK_T, "Тестовые команды");
 
         {
-            JMenuItem addLogMessageItem = new JMenuItem(res.getString("TestMenuSubMenuText"), KeyEvent.VK_S);
+            JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
             addLogMessageItem.addActionListener((event) -> Logger.debug("Новая строка"));
             testMenu.add(addLogMessageItem);
         }
@@ -107,13 +107,12 @@ class MainApplicationFrame extends JFrame {
     }
 
 
-
     private JMenu createLookAndFeelMenu() {
-        JMenu lookAndFeelMenu = createSubMenu(res.getString("LookAndFeelMenuName"), KeyEvent.VK_V,
-                res.getString("LookAndFeelMenuSubMenuName"));
+        JMenu lookAndFeelMenu = createSubMenu("Режим отображения", KeyEvent.VK_V,
+                "Управление режимом отображения приложения");
 
         {
-            JMenuItem systemLookAndFeel = new JMenuItem(res.getString("LookAndFeelMenuSubMenuType1"), KeyEvent.VK_S);
+            JMenuItem systemLookAndFeel = new JMenuItem("Системная схема", KeyEvent.VK_S);
             systemLookAndFeel.addActionListener((event) -> {
                 setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 this.invalidate();
@@ -122,7 +121,7 @@ class MainApplicationFrame extends JFrame {
         }
 
         {
-            JMenuItem crossplatformLookAndFeel = new JMenuItem(res.getString("LookAndFeelMenuSubMenuType2"), KeyEvent.VK_S);
+            JMenuItem crossplatformLookAndFeel = new JMenuItem("Универсальная схема", KeyEvent.VK_S);
             crossplatformLookAndFeel.addActionListener((event) -> {
                 setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                 this.invalidate();

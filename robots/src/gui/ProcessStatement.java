@@ -7,6 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
+/**
+ * Интерфейс для окон для сохранения/восстановления положения(координаты), состояния(свернуто/развернуто) и размера.
+ */
+
 public interface ProcessStatement {
 
     default Tuple<String, Map<String, String>> saveStatement(String windowName, JInternalFrame window) {

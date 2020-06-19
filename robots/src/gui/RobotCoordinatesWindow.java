@@ -6,8 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyVetoException;
 import java.util.Map;
-import java.util.ResourceBundle;
 
+/**
+ * Окно с координатами робота. Использует интерфейс Обозреватель, чтобы использовать модель - объект и обозреватель.
+ */
 class RobotCoordinatesWindow extends JInternalFrame implements Observer, ProcessStatement {
     private final TextArea textArea;
     private final GameModel gameModel;
@@ -16,8 +18,8 @@ class RobotCoordinatesWindow extends JInternalFrame implements Observer, Process
     private double targetPositionY = 0.0;
 
 
-    RobotCoordinatesWindow(GameModel gameModel, ConfigurationDataRecover recover, ResourceBundle res) {
-        super(res.getString("robotCoordinatesWindowName"), true, true, true, true);
+    RobotCoordinatesWindow(GameModel gameModel, ConfigurationDataRecover recover) {
+        super("Координаты робота", true, true, true, true);
         previousStatement = recoverStatement("coordinates", recover);
         setSize(200, 200);
         setLocation(5, 10);

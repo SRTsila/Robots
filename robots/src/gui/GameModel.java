@@ -4,7 +4,12 @@ import java.awt.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-
+/**
+ * Модель робота (код получения координат и моделирования движения)
+ * обозреваемый объект (Observable),
+ * чтобы затем окно могло подписаться на уведомления от модели и
+ * обновлять свое состояние
+ */
 class GameModel implements Model {
     private final List<Observer> observers = new CopyOnWriteArrayList<>();
 

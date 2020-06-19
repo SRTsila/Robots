@@ -2,7 +2,11 @@ package log;
 
 import java.util.*;
 
-public class LogQueue<T> implements Iterable<T> {
+/**
+ * Потокобезопасный класс на основе связанного списка.
+ */
+
+class LogQueue<T> implements Iterable<T> {
     private final LinkedList<T> queue;
     private final int maxSize;
 

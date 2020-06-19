@@ -1,5 +1,8 @@
 package gui;
 
+/**
+ * Класс состояния игры: координаты цели, координаты робота и напраление робота.
+ */
 
 class GameStatement {
     private double robotPositionX;
