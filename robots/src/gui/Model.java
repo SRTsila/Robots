@@ -12,3 +12,4 @@ public interface Model {
 
     GameStatement getState();
 }
+
