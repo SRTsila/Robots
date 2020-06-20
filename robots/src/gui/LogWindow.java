@@ -11,6 +11,7 @@ import java.beans.PropertyVetoException;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+
 public class LogWindow extends JInternalFrame implements LogChangeListener, ProcessStatement {
     private final LogWindowSource m_logSource;
     private final TextArea m_logContent;
@@ -58,7 +59,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Proc
     }
 
     public void setLocation(int x, int y) {
-        if (previousStatement == null)
+        if (previousStatement.isEmpty())
             super.setLocation(x, y);
         else {
             int previousX = previousStatement.get("x");

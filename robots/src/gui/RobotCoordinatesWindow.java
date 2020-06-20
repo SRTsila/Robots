@@ -8,6 +8,9 @@ import java.beans.PropertyVetoException;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+/**
+ * Окно с координатами робота. Использует интерфейс Обозреватель, чтобы использовать модель - объект и обозреватель.
+ */
 class RobotCoordinatesWindow extends JInternalFrame implements Observer, ProcessStatement {
     private final TextArea textArea;
     private final GameModel gameModel;
